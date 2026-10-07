@@ -1,235 +1,206 @@
-
-<div class="alert alert-info alert-dismissible fixed-top m-3 p-0 text-center small  d-none" id="pageErrors">
-    <span>...</span>
-    <button type="button" class="close py-0" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" class="small" style="cursor:pointer">&times;</span>
-    </button>
+<div class="kj-page-header">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="./">{lang.R_CPINDEX}</a></li>
+                <IF NAME="generated_preview_path">
+                <li class="breadcrumb-item"><a href="{action}">{olang.R_WATERMARK_SETTINGS}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{olang.WATERMARK_PREVIEW}</li>
+                <ELSE>
+                <li class="breadcrumb-item active" aria-current="page">{olang.R_WATERMARK_SETTINGS}</li>
+                </IF>
+            </ol>
+        </nav>
+        <h1 class="kj-page-title">{olang.R_WATERMARK_SETTINGS}</h1>
+    </div>
 </div>
 
-<!-- Breadcrumbs -->
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="./">{lang.R_CPINDEX}</a></li>
-    <li class="breadcrumb-item"><a href="{action}">{olang.R_WATERMARK_SETTINGS}</a></li>
-</ol>
+<IF NAME="generated_preview_path">
 
-<script>
-function loadWhenjQueryIsReady() {
-    setTimeout(function() {
-        if (typeof jQuery == 'undefined' && typeof window.jQuery == 'undefined') {
-            loadWhenjQueryIsReady();
-        } else {
-            $(document.body).on('change',"#watermark_type",function (e) {
-                if($('#watermark_type option:selected').val() == 'image') {
-                     $('#watermarkImageSetting').removeClass('d-none');
-                     $('#watermarkTextSetting').addClass('d-none');
-                } else {
-                     $('#watermarkImageSetting').addClass('d-none');
-                     $('#watermarkTextSetting').removeClass('d-none');
-                }
-            });
-        }
-    }, 500);
-}
-loadWhenjQueryIsReady();
-</script>
-
-
-<form id="watermarkform" action="{action}&amp;case=update" method="POST">
-
-<!-- tabs -->
-<div class="card text-center">
+<!-- the settings that were just saved, on a sample image -->
+<div class="card">
     <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs">
             <li class="nav-item">
-                <a class="nav-link (generated_preview_path?:active)" href="{action}">{lang.R_CONFIGS}</a>
+                <a class="nav-link" href="{action}">{lang.R_CONFIGS}</a>
             </li>
             <li class="nav-item">
-                 <button type="submit" name="preview" class="cursor-pointer nav-link (generated_preview_path?active:)"
-                     id=" updateBtn">{olang.WATERMARK_PREVIEW}</button>
+                <span class="nav-link active" aria-current="page">{olang.WATERMARK_PREVIEW}</span>
             </li>
         </ul>
     </div>
-    <div class="card-body py-0">
-<!--  -->
 
-<UNLESS NAME="generated_preview_path">
-<div class="d-flex justify-content-end my-3">
-    <button type="submit" class="btn btn-primary mx-1" id="updateBtn">{lang.UPDATE}</button>
-</div>
-
-
-<div class="card bg-light" id="homepageSetting">
-    <div class="card-header">{lang.CONFIG_KLJ_MENUS_GENERAL}</div>
     <div class="card-body">
+        <p class="form-text mt-0 mb-3">{olang.WATERMARK_PREVIEW_NOTE}</p>
 
-    <!-- watermark_type -->
-    <div class="form-group row">
-        <label for="watermark_type" class="col-sm-2 col-form-label">{olang.WATERMARK_TYPE}</label>
-        <div class="col-sm-10">
-            <select id="watermark_type" name="watermark_type" class="form-control">
-                <option value="image" (config.watermark_type==image?selected:)>{olang.WATERMARK_TYPE_IMAGE}</option>
-                <option value="text" (config.watermark_type==text?selected:)>{olang.WATERMARK_TYPE_TEXT}</option>
-            </select>
-        </div>
-    </div>
-
-    <!-- watermark_position -->
-    <div class="form-group row">
-        <label for="watermark_position" class="col-sm-2 col-form-label">{olang.WATERMARK_POSITION}</label>
-        <div class="col-sm-10">
-            <select id="watermark_position" name="watermark_position" class="form-control">
-                <option value="tr" (config.watermark_position==tr?selected:)>{olang.WATERMARK_POSITION_TR}</option>
-                <option value="tl" (config.watermark_position==tl?selected:)>{olang.WATERMARK_POSITION_TL}</option>
-                <option value="tc" (config.watermark_position==tc?selected:)>{olang.WATERMARK_POSITION_TC}</option>
-                <option value="br" (config.watermark_position==br?selected:)>{olang.WATERMARK_POSITION_BR}</option>
-                <option value="bl" (config.watermark_position==bl?selected:)>{olang.WATERMARK_POSITION_BL}</option>
-                <option value="bc" (config.watermark_position==bc?selected:)>{olang.WATERMARK_POSITION_BC}</option>
-            </select>
-        </div>
-    </div>
-
+        <figure class="mb-0">
+            <img src="{generated_preview_path}" class="kj-preview-img border" alt="{olang.WATERMARK_PREVIEW}">
+            <figcaption class="figure-caption text-end mt-2">
+                {olang.WATERMARK_PREVIEW_CREDIT}
+                <a href="https://500px.com/photo/228332789/untitled-by-mitan-omar" class="link-secondary" target="_blank" rel="noopener">Mitan Omar</a>
+            </figcaption>
+        </figure>
     </div>
 </div>
-
-
-<!-- image settings  -->
-<div class="card bg-light mt-4 (config.watermark_type==image?:d-none)" id="watermarkImageSetting">
-    <div class="card-header">{olang.R_WATERMARK_SETTINGS}: {olang.WATERMARK_TYPE_IMAGE}</div>
-    <div class="card-body">
-
-        <!-- watermark_type -->
-        <div class="form-group row">
-            <label for="watermark_type" class="col-sm-2 col-form-label">{olang.WATERMARK_TYPE}</label>
-            <div class="input-group col-sm-10">
-            <input type="text" class="form-control" name="watermark_image_path" id="watermark_image_path" disabled
-             value="{config.watermark_image_path}">
-                <div class="input-group-prepend">
-                    <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#uploadNewImage">
-                        <i class="fa fa-upload"></i> {lang.CHANGE}
-                    </a>
-                </div>
-            </div>
-        </div>
-</div>
-</div>
-
-
-<!-- text settings -->
-<div class="card bg-light mt-4 (config.watermark_type==text?:d-none)" id="watermarkTextSetting">
-    <div class="card-header">{olang.R_WATERMARK_SETTINGS}: {olang.WATERMARK_TYPE_TEXT}</div>
-    <div class="card-body">
-
-    <!-- watermark_text_content -->
-    <div class="form-group row">
-        <label for="watermark_text_content" class="col-sm-2 col-form-label">{olang.WATERMARK_TEXT_CONTENT}</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" name="watermark_text_content" id="watermark_text_content"
-                value="{config.watermark_text_content}">
-        </div>
-    </div>
-
-    <!-- watermark_text_size -->
-    <div class="form-group row">
-        <label for="watermark_text_size" class="col-sm-2 col-form-label">{olang.WATERMARK_TEXT_SIZE}</label>
-        <div class="col-sm-10">
-            <input type="number" class="form-control" name="watermark_text_size" id="watermark_text_size"
-                value="{config.watermark_text_size}">
-        </div>
-    </div>
-
-    <!-- watermark_text_color -->
-    <div class="form-group row">
-        <label for="watermark_text_color" class="col-sm-2 col-form-label">{olang.WATERMARK_TEXT_COLOR}</label>
-        <div class="col-sm-10">
-            <input type="color" class="form-control" name="watermark_text_color" id="watermark_text_color"
-                value="{config.watermark_text_color}">
-        </div>
-    </div>
-
-    <!-- watermark_text_background -->
-    <div class="form-group row">
-        <label for="watermark_text_background" class="col-sm-2 col-form-label">{olang.WATERMARK_TEXT_BACKGROUND}</label>
-        <div class="col-sm-10 d-flex justify-content-between flex-column">
-            <input type="color" class="form-control" name="watermark_text_background" id="watermark_text_background"
-                value="{config.watermark_text_background}">
-            <div class="px-4 pt-2 form-check">
-                <input type="checkbox" class="form-check-input" (config.watermark_text_background_enable?checked:)
-                    id="watermark_text_background_enable" name="watermark_text_background_enable">
-                <label class="form-check-label"
-                    for="watermark_text_background_enable">{olang.WATERMARK_TEXT_BACKGROUND_ENABLE}</label>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- watermark_text_font -->
-    <div class="form-group row">
-        <label for="watermark_text_font" class="col-sm-2 col-form-label">{olang.WATERMARK_TEXT_FONT}</label>
-        <div class="col-sm-10">
-            <select id="watermark_text_font" name="watermark_text_font" class="form-control">
-                <option value="default" (config.watermark_text_font==default?selected:)>Default Font</option>
-                <option value="amiri" (config.watermark_text_font==amiri?selected:)>Amiri</option>
-                <option value="kacstoffice" (config.watermark_text_font==kacstoffice?selected:)>KacstOffice</option>
-                <option value="flat" (config.watermark_text_font==flat?selected:)>flat</option>
-            </select>
-        </div>
-    </div>
-
-
-    </div>
-</div>
-
-
-
-<div class="d-flex justify-content-end my-3">
-    <button type="submit" class="btn btn-primary mx-1" id="updateBtn">{lang.UPDATE}</button>
-</div>
-{H_FORM_KEYS}
-
 
 <ELSE>
-    <div class="py-3 d-flex justify-content-between flex-column">
-    <img src="{generated_preview_path}" class="p-0 img-thumbnail">
 
-    <small class="text-muted align-self-end mt-2">© Image by <a href="https://500px.com/photo/228332789/untitled-by-mitan-omar" class="text-muted" target="_tab">Mitan Omar</a></small>
+<!-- the settings and the preview are the tabs of the card, the preview tab saves the form and shows the result -->
+<form method="post" action="{action}&amp;case=update" id="watermark_form" class="card">
+    <div class="card-header">
+        <!-- the first submit button of a form is the one of the Enter key, so Enter saves instead of previewing -->
+        <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true"></button>
 
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="{action}" aria-current="page">{lang.R_CONFIGS}</a>
+            </li>
+            <li class="nav-item">
+                <button type="submit" name="preview" value="1" class="nav-link">{olang.WATERMARK_PREVIEW}</button>
+            </li>
+        </ul>
     </div>
-</IF>
 
-</form>
+    <div class="card-body">
+        <div class="alert alert-info d-flex align-items-start gap-2" role="alert">
+            <i class="fa-solid fa-circle-info kj-alert-icon" aria-hidden="true"></i>
+            <div>{olang.WATERMARK_NOT_ENABLED_NOTE}</div>
+        </div>
 
-<!-- end tabs -->
-  </div>
-  </div>
-<!--  -->
+        <h2 class="kj-section-title">{lang.CONFIG_KLJ_MENUS_GENERAL}</h2>
 
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label" for="watermark_type">{olang.WATERMARK_TYPE}</label>
+                <select class="form-select" id="watermark_type" name="watermark_type">
+                    <LOOP NAME="watermark_types">
+                    <option value="{{value}}"<IF LOOP="selected"> selected</IF>>{{title}}</option>
+                    </LOOP>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="watermark_position">{olang.WATERMARK_POSITION}</label>
+                <select class="form-select" id="watermark_position" name="watermark_position">
+                    <LOOP NAME="watermark_positions">
+                    <option value="{{value}}"<IF LOOP="selected"> selected</IF>>{{title}}</option>
+                    </LOOP>
+                </select>
+            </div>
+        </div>
 
-<!-- new image modal -->
-<div id="uploadNewImage" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newImage" aria-hidden="true">
+        <!-- the settings of the type that isn't chosen are hidden, and saved as they are -->
+        <div id="watermark_image_settings"<IF NAME="watermark_is_text"> class="d-none"</IF>>
+            <h2 class="kj-section-title">{olang.WATERMARK_IMAGE_SETTINGS}</h2>
 
-    <form method="post" action="{action}&amp;case=upload" id="newimageform" enctype="multipart/form-data">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="newImage">{lang.UPLOAD_LOCAL_PC}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <label class="form-label" for="watermark_image_path">{olang.WATERMARK_IMAGE_PATH}</label>
+            <div class="d-flex flex-wrap align-items-start gap-3">
+                <IF NAME="watermark_image_exists">
+                <div class="border rounded p-2 bg-body-tertiary">
+                    <img src="{watermark_image_url}" alt="{olang.WATERMARK_IMAGE_PATH}" class="d-block" style="max-width: 12rem; max-height: 5rem">
                 </div>
-                <div class="modal-body">
-
-                    <label class="form-control">
-                        <input type="file" id="file" name="newimage">
-                    </label>
-
-                    {H_FORM_KEYS}
-
-                </div>
-                <div class="modal-footer">
-                    <input type="submit" name="newimage" class="btn btn-primary" value="{lang.SUBMIT}">
+                </IF>
+                <div class="flex-grow-1">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="watermark_image_path" value="{watermark_image_path}" dir="ltr" readonly aria-describedby="watermark_image_hint">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#watermark_upload">
+                            <i class="fa-solid fa-upload" aria-hidden="true"></i><span>{lang.CHANGE}</span>
+                        </button>
+                    </div>
+                    <div class="form-text" id="watermark_image_hint">{olang.WATERMARK_IMAGE_HINT}</div>
+                    <IF NAME="watermark_image_exists"><ELSE>
+                    <div class="form-text text-danger"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {olang.WATERMARK_IMAGE_MISSING}</div>
+                    </IF>
                 </div>
             </div>
         </div>
-    </form>
+
+        <div id="watermark_text_settings"<IF NAME="watermark_is_text"><ELSE> class="d-none"</IF>>
+            <h2 class="kj-section-title">{olang.WATERMARK_TEXT_SETTINGS}</h2>
+
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label" for="watermark_text_content">{olang.WATERMARK_TEXT_CONTENT}</label>
+                    <input type="text" class="form-control" id="watermark_text_content" name="watermark_text_content" value="{watermark_text_content}" maxlength="100" dir="auto">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="watermark_text_font">{olang.WATERMARK_TEXT_FONT}</label>
+                    <select class="form-select" id="watermark_text_font" name="watermark_text_font">
+                        <LOOP NAME="watermark_fonts">
+                        <option value="{{value}}"<IF LOOP="selected"> selected</IF>>{{title}}</option>
+                        </LOOP>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="watermark_text_size">{olang.WATERMARK_TEXT_SIZE}</label>
+                    <input type="number" class="form-control" id="watermark_text_size" name="watermark_text_size" value="{watermark_text_size}" min="1" max="500" dir="ltr">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="watermark_text_color">{olang.WATERMARK_TEXT_COLOR}</label>
+                    <input type="color" class="form-control form-control-color" id="watermark_text_color" name="watermark_text_color" value="{watermark_text_color}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="watermark_text_background">{olang.WATERMARK_TEXT_BACKGROUND}</label>
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                        <input type="color" class="form-control form-control-color" id="watermark_text_background" name="watermark_text_background" value="{watermark_text_background}">
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" role="switch" id="watermark_text_background_enable" name="watermark_text_background_enable" value="1"<IF NAME="watermark_text_background_enable"> checked</IF>>
+                            <label class="form-check-label" for="watermark_text_background_enable">{olang.WATERMARK_TEXT_BACKGROUND_ENABLE}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer kj-form-actions">
+        <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i><span>{lang.UPDATE_CONFIG}</span>
+        </button>
+    </div>
+
+    {H_FORM_KEYS}
+</form>
+
+<!-- upload a new watermark image -->
+<div id="watermark_upload" class="modal fade" tabindex="-1" aria-labelledby="watermark_upload_title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="post" action="{action}&amp;case=upload" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="watermark_upload_title">{olang.WATERMARK_IMAGE_UPLOAD}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{lang.CLOSE}"></button>
+            </div>
+            <div class="modal-body">
+                <label class="form-label" for="watermark_new_image">{lang.UPLOAD_LOCAL_PC}</label>
+                <input class="form-control" type="file" id="watermark_new_image" name="newimage" accept=".png,.gif,.jpg,.jpeg,image/png,image/gif,image/jpeg" required aria-describedby="watermark_new_image_hint">
+                <div class="form-text" id="watermark_new_image_hint">{olang.WATERMARK_IMAGE_HINT}</div>
+                {H_FORM_KEYS}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{lang.CLOSE}</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-upload" aria-hidden="true"></i><span>{lang.SUBMIT}</span>
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
-<!-- end new image modal -->
+
+<IGNORE>
+<script>
+    // only the settings of the chosen type are shown
+    (function (type) {
+        if (!type) {
+            return;
+        }
+
+        type.addEventListener("change", function () {
+            var isText = type.value === "text";
+
+            document.getElementById("watermark_text_settings").classList.toggle("d-none", !isText);
+            document.getElementById("watermark_image_settings").classList.toggle("d-none", isText);
+        });
+    })(document.getElementById("watermark_type"));
+</script>
+</IGNORE>
+
+</IF>

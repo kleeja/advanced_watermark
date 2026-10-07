@@ -174,6 +174,11 @@ class I18N_Arabic_Glyphs
 
         $pos = mb_strpos($this->_glyphs, $char);
 
+        // Kleeja: a character that has no glyphs, like "©", stays as it is instead of becoming the first glyph
+        if ($pos === false) {
+            return sprintf('%04X', mb_ord($char));
+        }
+
         if ($pos > 49) {
             $pos = ($pos-49)/2 + 49;
         }
@@ -215,10 +220,11 @@ class I18N_Arabic_Glyphs
                 $prevChar = $chars[$i - 1];
             }
 
+            // Kleeja: before the first letter is a space, which links to nothing
             if ($prevChar && mb_strpos($this->_vowel, $prevChar) !== false) {
-                $prevChar = $chars[$i - 2];
+                $prevChar = $chars[$i - 2] ?? ' ';
                 if ($prevChar && mb_strpos($this->_vowel, $prevChar) !== false) {
-                    $prevChar = $chars[$i - 3];
+                    $prevChar = $chars[$i - 3] ?? ' ';
                 }
             }
 
@@ -269,7 +275,7 @@ class I18N_Arabic_Glyphs
                 || $prevChar == 'لإ' || $prevChar == 'ل')
                 && (mb_strpos('آأإا', $crntChar) !== false)
             ) {
-                if (mb_strpos($this->_prevLink, $chars[$i - 2]) !== false) {
+                if (mb_strpos($this->_prevLink, $chars[$i - 2] ?? ' ') !== false) {
                     $form++;
                 }
 
@@ -560,11 +566,10 @@ class I18N_Arabic_Glyphs
 
         // We store named entities in a table for quick processing.
         if (!isset($table)) {
-            // Get all named HTML entities.
+            // Get all named HTML entities, PHP gives them in UTF-8 already
+            // (Kleeja: utf8_encode() of the original code is deprecated since PHP 8.2,
+            // and it encoded the UTF-8 entities a second time)
             $table = array_flip(get_html_translation_table(HTML_ENTITIES));
-
-            // PHP gives us ISO-8859-1 data, we need UTF-8.
-            $table = array_map('utf8_encode', $table);
 
             // Add apostrophe (XML)
             $table['&apos;'] = "'";
@@ -580,8 +585,16 @@ class I18N_Arabic_Glyphs
         $pieces = explode('&', $text);
         $text   = array_shift($pieces);
         foreach ($pieces as $piece) {
-            if ($piece[0] == '#') {
-                if ($piece[1] == 'x') {
+            $end   = mb_strpos($piece, ';');
+
+            // Kleeja: an "&" that doesn't start an entity, like in "Tom & Jerry", stays as it is
+            if ($end === false) {
+                $text .= '&'.$piece;
+                continue;
+            }
+
+            if (substr($piece, 0, 1) == '#') {
+                if (substr($piece, 1, 1) == 'x') {
                     $one = '#x';
                 } else {
                     $one = '#';
@@ -589,7 +602,6 @@ class I18N_Arabic_Glyphs
             } else {
                 $one = '';
             }
-            $end   = mb_strpos($piece, ';');
             $start = mb_strlen($one);
 
             $two   = mb_substr($piece, $start, $end - $start);
