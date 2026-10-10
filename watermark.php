@@ -28,7 +28,7 @@ function adv_helper_watermark($name, $ext)
         return;
     }
 
-    $is_image_type = ($config['watermark_type'] ?? 'image') != 'text';
+    $is_image_type = ($config['watermark_type'] ?? 'image') !== 'text';
     $path_to_watermark = PATH . ltrim(htmlspecialchars_decode($config['watermark_image_path'] ?? ''), '/');
 
     if ($is_image_type) {
@@ -158,7 +158,7 @@ function adv_helper_watermark_imagick($name, $ext, $logo)
 
     $im = new Imagick($name);
 
-    if (($config['watermark_type'] ?? 'image') != 'text') {
+    if (($config['watermark_type'] ?? 'image') !== 'text') {
         $watermark = new Imagick($logo);
         $wWidth = $watermark->getImageWidth();
         $wHeight = $watermark->getImageHeight();
@@ -203,7 +203,7 @@ function adv_helper_watermark_imagick($name, $ext, $logo)
 
     //an exception for gif image
     //generating thumb with 10 frames only, big gif is a devil
-    if ($ext == 'gif') {
+    if ($ext === 'gif') {
         $i = 0;
 
         foreach ($im as $frame) {
@@ -265,7 +265,11 @@ function adv_watermark_font_path()
 
     $font = $config['watermark_text_font'] ?? 'default';
 
-    if ($font != 'default' && isset(advanced_watermark_choices()['font'][$font]) && is_file(__DIR__ . "/{$font}.ttf")) {
+    if (
+        $font !== 'default' &&
+        isset(advanced_watermark_choices()['font'][$font]) &&
+        is_file(__DIR__ . "/{$font}.ttf")
+    ) {
         return __DIR__ . "/{$font}.ttf";
     }
 
@@ -329,10 +333,10 @@ function adv_get_watermark_position($bwidth, $bheight, $lwidth, $lheight, $type 
     ][$position[1]];
 
     //top or bottom
-    if ($position[0] == 't') {
-        $src_y = ($type == 'image' ? 0 : $lheight) + 15;
+    if ($position[0] === 't') {
+        $src_y = ($type === 'image' ? 0 : $lheight) + 15;
     } else {
-        $src_y = $type == 'image' ? $bheight - ($lheight + 5) : $bheight - 5;
+        $src_y = $type === 'image' ? $bheight - ($lheight + 5) : $bheight - 5;
     }
 
     return [(int) round($src_x), (int) round($src_y)];

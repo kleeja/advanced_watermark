@@ -288,9 +288,9 @@ if (!function_exists('advanced_watermark_default_configs')) {
         $prefix = 'ADVANCED_WATERMARK_HELP_' . $name;
         $section = ['type' => $type, 'title' => $words[$prefix . '_TITLE'] ?? '', 'items' => []];
 
-        for ($n = 1; isset($words[$prefix . ($type == 'faq' ? '_Q_' : '_') . $n]); $n++) {
+        for ($n = 1; isset($words[$prefix . ($type === 'faq' ? '_Q_' : '_') . $n]); $n++) {
             $section['items'][] =
-                $type == 'faq'
+                $type === 'faq'
                     ? ['q' => $words[$prefix . '_Q_' . $n], 'a' => $words[$prefix . '_A_' . $n] ?? '']
                     : $words[$prefix . '_' . $n];
         }

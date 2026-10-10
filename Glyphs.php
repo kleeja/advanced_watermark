@@ -251,7 +251,7 @@ class I18N_Arabic_Glyphs
                 continue;
             }
 
-            if ($crntChar == 'ل' && isset($chars[$i + 1])
+            if ($crntChar === 'ل' && isset($chars[$i + 1])
                 && (mb_strpos('آأإا', $chars[$i + 1]) !== false)
             ) {
                 continue;
@@ -271,8 +271,8 @@ class I18N_Arabic_Glyphs
 
             $form = 0;
 
-            if (($prevChar == 'لا' || $prevChar == 'لآ' || $prevChar == 'لأ'
-                || $prevChar == 'لإ' || $prevChar == 'ل')
+            if (($prevChar === 'لا' || $prevChar === 'لآ' || $prevChar === 'لأ'
+                || $prevChar === 'لإ' || $prevChar === 'ل')
                 && (mb_strpos('آأإا', $crntChar) !== false)
             ) {
                 if (mb_strpos($this->_prevLink, $chars[$i - 2] ?? ' ') !== false) {
@@ -419,11 +419,11 @@ class I18N_Arabic_Glyphs
                 }
                 $words[$i] = strrev($words[$i]);
                 array_push($english, $words[$i]);
-                if ($en_index == -1) {
+                if ($en_index === -1) {
                     $en_index = $i;
                 }
                 $en_words[] = true;
-            } elseif ($en_index != -1) {
+            } elseif ($en_index !== -1) {
                 $en_count = count($english);
 
                 for ($j = 0; $j < $en_count; $j++) {
@@ -439,7 +439,7 @@ class I18N_Arabic_Glyphs
             }
         }
 
-        if ($en_index != -1) {
+        if ($en_index !== -1) {
             $en_count = count($english);
 
             for ($j = 0; $j < $en_count; $j++) {
@@ -593,8 +593,8 @@ class I18N_Arabic_Glyphs
                 continue;
             }
 
-            if (substr($piece, 0, 1) == '#') {
-                if (substr($piece, 1, 1) == 'x') {
+            if (substr($piece, 0, 1) === '#') {
+                if (substr($piece, 1, 1) === 'x') {
                     $one = '#x';
                 } else {
                     $one = '#';
@@ -636,7 +636,7 @@ class I18N_Arabic_Glyphs
         }
 
         // Hexadecimal numerical entity
-        if ($prefix == '#x') {
+        if ($prefix === '#x') {
             $codepoint = base_convert($codepoint, 16, 10);
         }
 

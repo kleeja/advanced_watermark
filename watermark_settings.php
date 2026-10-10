@@ -62,7 +62,7 @@ switch ($current_case) {
 
         $old_image_path = $config['watermark_image_path'] ?? '';
         $uploads_folder = trim($config['foldername'], '/');
-        $image_path = $uploads_folder . '/watermark' . mt_rand() . '.' . ($ext == 'jpeg' ? 'jpg' : $ext);
+        $image_path = $uploads_folder . '/watermark' . mt_rand() . '.' . ($ext === 'jpeg' ? 'jpg' : $ext);
 
         if (!move_uploaded_file($new_image['tmp_name'], PATH . $image_path)) {
             kleeja_admin_err($lang['ERROR_TRY_AGAIN'], $action);
@@ -160,7 +160,7 @@ foreach (['type', 'position', 'font'] as $choice) {
         $watermark_lists[$choice][] = [
             'value' => $value,
             'title' => $olang[$title] ?? $title,
-            'selected' => ($config['watermark_' . ($choice == 'font' ? 'text_font' : $choice)] ?? '') == $value,
+            'selected' => ($config['watermark_' . ($choice === 'font' ? 'text_font' : $choice)] ?? '') === $value,
         ];
     }
 }
@@ -169,7 +169,7 @@ $watermark_types = $watermark_lists['type'];
 $watermark_positions = $watermark_lists['position'];
 $watermark_fonts = $watermark_lists['font'];
 
-$watermark_is_text = ($config['watermark_type'] ?? '') == 'text';
+$watermark_is_text = ($config['watermark_type'] ?? '') === 'text';
 
 // the image of the watermark, it is a path from the root of Kleeja
 $watermark_image_path = $config['watermark_image_path'] ?? '';
